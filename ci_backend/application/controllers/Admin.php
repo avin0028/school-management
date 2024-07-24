@@ -91,4 +91,43 @@ class Admin extends My_Controller
         $this->Response(["message" => "course deleted "]);
         die;
     }
+
+    public function getClasses()
+    {
+        $this->checkIsAdmin();
+        $this->load->model('Class_model');
+        $res = $this->Class_model->get_props(["teacher_username", "name", "id"]);
+        $this->Response($res);
+        die;
+    }
+
+    public function addClass()
+    {
+        $this->checkIsAdmin();
+
+        $this->load->model('Class_model');
+        $teacher_id = $this->input->post("teacher_id");
+        $course_id = $this->input->post('course_id');
+        $class_name = $this->input->post('class_name');
+
+        $data = [
+            "teacher_username" => $teacher_id,
+            "course_id" => $course_id,
+            "name" => $class_name
+
+        ];
+        $this->Class_model->create($data);
+        $this->Response(["message" => "class {$class_name} added "]);
+        die;
+    }
+
+    public function deleteClass()
+    {
+        $this->checkIsAdmin();
+        $this->load->model('Class_model');
+        $class_id = $this->input->post('class_id');
+        $this->Class_model->delete(["id" => $class_id]);
+        $this->Response(['message' => "class deleted"]);
+        die;
+    }
 }

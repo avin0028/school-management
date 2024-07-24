@@ -13,10 +13,7 @@ class Migration_create_class_table extends CI_Migration
                 'auto_increment' => TRUE
 
             ],
-            'class_students_id' => [
-                'type' => "INT",
-                'constraint' => 11,
-            ],
+
             "teacher_username" => [
                 "type" => "VARCHAR",
                 'constraint' => 20
@@ -24,6 +21,10 @@ class Migration_create_class_table extends CI_Migration
             "course_id" => [
                 "type" => "VARCHAR",
                 "constraint" => 11
+            ],
+            "name" => [
+                "type" => "VARCHAR",
+                "constraint" => 30
             ]
 
         ];

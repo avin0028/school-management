@@ -33,7 +33,7 @@ class My_Controller extends CI_Controller
         return $res[0];
     }
 
-    // takes an array with code and res
+
     protected function Response($res, $code = 200)
     {
         $this->output
