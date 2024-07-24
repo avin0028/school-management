@@ -28,8 +28,11 @@ class My_Controller extends CI_Controller
             $error = ['message' => "unathorized access"];
             $res = ['res' => $error, 'code' => 401];
             $this->Response($res);
+            die;
         }
+        return $res[0];
     }
+
     // takes an array with code and res
     protected function Response($res, $code = 200)
     {
@@ -39,5 +42,8 @@ class My_Controller extends CI_Controller
             ->set_output(json_encode($res))
             ->_display();
         die;
+    }
+    protected function getRole()
+    {
     }
 }

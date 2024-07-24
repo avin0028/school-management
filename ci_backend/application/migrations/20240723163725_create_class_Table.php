@@ -7,29 +7,29 @@ class Migration_create_class_table extends CI_Migration
     public function up()
     {
         $fields = [
-            'username' => [
-                'type' => 'VARCHAR',
+            'id' => [
+                'type' => 'INT',
                 'constraint' => 20,
+                'auto_increment' => TRUE
 
             ],
-            'password' => [
-                'type' => 'VARCHAR',
-                'constraint' => 35,
+            'class_students_id' => [
+                'type' => "INT",
+                'constraint' => 11,
             ],
+            "teacher_username" => [
+                "type" => "VARCHAR",
+                'constraint' => 20
+            ],
+            "course_id" => [
+                "type" => "VARCHAR",
+                "constraint" => 11
+            ]
 
-            'nickname' => [
-                'type' => 'VARCHAR',
-                'constraint' => 30,
-            ],
-
-            'role' => [
-                'type' => 'VARCHAR',
-                'constraint' => 3
-            ],
         ];
 
         $this->dbforge->add_field($fields);
-        $this->dbforge->add_key('username', TRUE);
+        $this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('class');
     }
 
