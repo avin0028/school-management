@@ -9,7 +9,7 @@ class My_Model extends CI_Model
     {
 
         $res = [];
-        if ($condition == false) {
+        if ($condition != false) {
             $res = $this->db->get_where($this->table_name, $condition);
         } else {
             $res = $this->db->get($this->table_name);

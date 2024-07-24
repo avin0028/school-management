@@ -44,9 +44,13 @@ class Users extends My_Controller
             'nickname' => $res[0]['nickname'],
             'role' => $res[0]['role']
         ];
+
         $this->Response($data);
     }
-    public function register()
+
+    // Note: we don't need the register functionality since admin handles it
+    // Note: code remains for further use
+    public function ___register()
     {
         $username = $this->input->post('username');
         $password = $this->input->post('password');

@@ -11,22 +11,30 @@ class Admin extends My_Controller
             die;
         }
     }
-    public function getStudents()
+    public function getUsers()
     {
         $this->checkIsAdmin();
         $this->load->model("User_model");
-        $res = $this->User_model->get_props(["nickname", "username"], ["role" => "stu"]);
+        $role = $this->input->post('role');
+        $res = [];
+        if ($role == "stu") {
+            $res = $this->User_model->get_props(["nickname", "username"], ['role' => 'stu']);
+        } elseif ($role == "tea") {
+            $res = $this->User_model->get_props(["nickname", "username"], ['role' => 'tea']);
+        } else {
+            $res = $this->User_model->get_props(["nickname", "username", "role"]);
+        }
         $this->Response($res);
         die;
     }
 
-    public function addStudent()
+    public function addUser()
     {
-        //check for duplicate
         $this->checkIsAdmin();
         $username = $this->input->post('username');
         $password = $this->input->post('password');
         $nickname = $this->input->post('nickname');
+        $role = $this->input->post('role');
 
         if (!$username || !$password || !$nickname) {
             $this->Response('invalid input', 400);
@@ -46,12 +54,13 @@ class Admin extends My_Controller
             'username' => $username,
             "password" => passwordhasher($password),
             "nickname" => $nickname,
-            "role" => "stu"
+            "role" => $role
         ];
         $this->User_model->create($data);
         $this->Response(['message' => "student {$nickname} added"]);
     }
-    public function removeStudent()
+
+    public function removeUser()
     {
         $this->checkIsAdmin();
 
