@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Users extends CI_Controller
+class Users extends My_Controller
 {
     public function index()
     {
@@ -14,13 +14,8 @@ class Users extends CI_Controller
         $password = $this->input->post('password');
 
         if (!$username || !$password) {
-            $invalid_input_error =  [
-                'message' => "invalid input",
-                "status" => "400"
-            ];
-            $this->output
-                ->set_content_type('application/json')->set_status_header('400')
-                ->set_output(json_encode($invalid_input_error));
+            $invalid_input_error =  ['message' => "invalid input"];
+            $this->Response($invalid_input_error, 400);
             die;
         }
 
@@ -33,31 +28,23 @@ class Users extends CI_Controller
         $res = $this->User_model->get($data);
         $res_rows = count($res);
 
+
         if ($res_rows == 0) {
-            $credentials_error =  [
-                'message' => "invalid credentials",
-                "status" => "400"
-            ];
-            $this->output
-                ->set_status_header('400')
-                ->set_content_type('application/json')
-                ->set_output(json_encode($credentials_error))
-                ->_display();
+            $credentials_error =  ['message' => "invalid credentials"];
+            $this->Response($credentials_error, 400);
             die;
         }
 
 
         $this->load->helper('cookie_generator');
-        $cookie = generate_cookie();
+        $cookie = generate_auth_cookie($username);
         $this->input->set_cookie($cookie);
 
         $data = [
-            'nickname' => $res['nickname'],
-            'role' => $res['role']
+            'nickname' => $res[0]['nickname'],
+            'role' => $res[0]['role']
         ];
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($data));
+        $this->Response($data);
     }
     public function register()
     {
@@ -67,27 +54,18 @@ class Users extends CI_Controller
         $role = $this->input->post('role');
 
         if (!$username || !$password || !$nickname || !$role) {
-            $invalid_input_error = ['message' => "invalid input", "status" => "400"];
-            $this->output
-                ->set_content_type('application/json')
-                ->set_status_header('400')
-                ->set_output(json_encode($invalid_input_error))
-                ->_display();
+            $invalid_input_error = ['message' => "invalid input"];
+            $this->Response($invalid_input_error, 400);
             die;
         }
         $this->load->model('User_model');
 
         $userExists = count($this->User_model->get(['username' => $username]));
-        if ($userExists = 1) {
-            $error_msg = ['message' => "user already exists", "status" => "400"];
-            $this->output
-                ->set_content_type('application/json')
-                ->set_status_header('400')
-                ->set_output(json_encode($error_msg))
-                ->_display();
+        if ($userExists == 1) {
+            $error_msg = ['message' => "user already exists"];
+            $this->Response($error_msg, 400);
             die;
         }
-
 
         $this->load->helper('password_hasher');
         $data = [
@@ -97,18 +75,14 @@ class Users extends CI_Controller
             "role" => $role
         ];
         $this->User_model->create($data);
-
         $response = [
             'nickname' => $data['nickname'],
             'role' => $data['role']
         ];
         $this->load->helper('cookie_generator');
 
-        $cookie = generate_cookie();
+        $cookie = generate_auth_cookie($username);
         $this->input->set_cookie($cookie);
-        $this->output
-            ->set_content_type('application/json')
-            ->set_status_header('200')
-            ->set_output(json_encode($response));
+        $this->Response($response);
     }
 }

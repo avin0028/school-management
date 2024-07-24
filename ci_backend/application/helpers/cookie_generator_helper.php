@@ -1,10 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-function generate_cookie()
+function generate_auth_cookie($cookie)
 {
-    $random = bin2hex(random_bytes(16));
-    $token = base64_encode($random);
+    $token = base64_encode($cookie);
     $cookie = [
         'name'   => 'auth_token',
         'value'  => $token,
