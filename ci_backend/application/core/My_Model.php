@@ -39,4 +39,9 @@ class My_Model extends CI_Model
     {
         return $this->db->delete($this->table_name, $condition);
     }
+    public function customQuery($q)
+    {
+        $query =  $this->db->query($q);
+        return $query->result_array();
+    }
 }

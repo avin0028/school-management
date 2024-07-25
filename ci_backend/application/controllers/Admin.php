@@ -11,22 +11,42 @@ class Admin extends My_Controller
             die;
         }
     }
-    public function getUsers()
+    public function getUsers($role)
     {
         $this->checkIsAdmin();
         $this->load->model("User_model");
-        $role = $this->input->post('role');
-        $res = [];
+        $res = null;
         if ($role == "stu") {
             $res = $this->User_model->get_props(["nickname", "username"], ['role' => 'stu']);
         } elseif ($role == "tea") {
             $res = $this->User_model->get_props(["nickname", "username"], ['role' => 'tea']);
-        } else {
-            $res = $this->User_model->get_props(["nickname", "username", "role"]);
         }
         $this->Response($res);
         die;
     }
+	public function getTeachers(){
+		$this->getUsers("tea");
+	}
+	public function getTeachersClasses(){
+
+		$this->checkIsAdmin();
+		$this->load->model("Class_model");
+		$teacherId = $this->input->post("teacherid");
+		$res = $this->Class_model->get_props(["id","name"],["teacher_username" => $teacherId]);
+		$this->Response($res);
+		die;
+	}
+	public function getStudents(){
+		$this->getUsers("stu");
+	}
+	public function getTeachersStudents(){
+		$this->checkIsAdmin();
+		$this->load->model("User_model");
+		$teacher_id = $this->input->post("teacherid");
+		$res = $this->User_model->getTeachersStudent($teacher_id);
+		$this->Response($res);
+		die;
+	}
 
     public function addUser()
     {
@@ -139,4 +159,25 @@ class Admin extends My_Controller
         $this->Response(['message' => "class deleted"]);
         die;
     }
+    public function setSchedule()
+    {
+        $this->checkIsAdmin();
+        $this->load->model("Schedule_model");
+		$data = [
+			"class_id" => $this->input->post("classid"),
+			"weekname" => $this->input->post("weekname")
+		];
+		$this->Schedule_model->create($data);
+		$this->Response(["message"=> "schedule added"]);
+		die;
+
+    }
+	public function getSchedule(){
+		$this->checkIsAdmin();
+		$this->load->model("Schedule_model");
+		$res = $this->Schedule_model->getSchedule();
+		return $this->Response($res);
+	}
+
+
 }

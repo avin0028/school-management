@@ -12,16 +12,15 @@ class Migration_create_class_students_table extends CI_Migration
                 'type' => 'INT',
                 'constraint' => 20,
             ],
-            'student_id' => [
-                'type' => "INT",
-                'constraint' => 11,
+            'student_username' => [
+                'type' => "VARCHAR",
+                'constraint' => 20,
             ],
 
         ];
 
         $this->dbforge->add_field($fields);
-        $this->dbforge->add_key(['student_id', 'class_id'], true);
-        $this->dbforge->add_key('id', true);
+        $this->dbforge->add_key(['student_username', 'class_id'], true);
 
         $this->dbforge->create_table('class_students');
     }
